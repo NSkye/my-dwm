@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 3;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int gappx     = 6;	/* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
@@ -17,7 +17,7 @@ static const char col_gray3[]       = "#e2d8c2";
 // current tag and current window font
 static const char col_gray4[]       = "#eeeeee";
 // active tag color and current window border color
-static const char col_cyan[]        = "#e77604";
+static const char col_cyan[]        = "e57504";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
