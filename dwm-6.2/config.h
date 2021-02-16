@@ -34,9 +34,11 @@ static const Rule rules[] = {
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
 	/*
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },*/
-	{ NULL,       NULL,       NULL,       0,	    False, 	 -1 },
+	 * Rules have to have at least one item.
+	 * NULL class would match every single window,
+	 * to avoid this matching class is set to an empty string
+	 */
+	{ "",	      NULL,	  NULL,	      0,	    0, 		 -1 },
 };
 
 /* layout(s) */
