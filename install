@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. "./version"
+
+make install -C "dwm-$VERSION/"
