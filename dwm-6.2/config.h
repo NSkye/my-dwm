@@ -1,17 +1,27 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int gappih = 5; // horiz inner gap between windows
+static const unsigned int gappiv = 5; // vert inner gap between windows
+static const unsigned int gappoh = 10; // horiz outer gap
+static const unsigned int gappov = 10; // cert outer gap
+static int smartgaps = 1; // 0 or 1 - disable outer gap when only one window
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
+// bg color
+static const char col_gray1[]       = "#213433";
+// inactive window border
+static const char col_gray2[]       = "#213433";
+// font color
+static const char col_gray3[]       = "#e2d8c2";
+// current tag and current window font
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+// active tag color and current window border color
+static const char col_cyan[]        = "#e57504";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -27,8 +37,12 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/*
+	 * Rules have to have at least one item.
+	 * NULL class would match every single window,
+	 * to avoid this matching class is set to an empty string
+	 */
+	{ "",	      NULL,	  NULL,	      0,	    0, 		 -1 },
 };
 
 /* layout(s) */
@@ -36,11 +50,21 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
+#define FORCE_VSPLIT 1 // nrowgrid layout: force two clients to always split vertically
+#include "vanitygaps.c"
+
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "[@]",      spiral },
+	{ "[\\]",     dwindle },
+	{ "M[ ]",      deck },
+	{ "TTT",      bstack },
+	{ "===",      bstackhoriz },
+	{ "HHH",      grid },
+	{ "|M|",      centeredmaster },
 };
 
 /* key definitions */
@@ -66,24 +90,36 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_i,      incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY|ShiftMask,		XK_r,	   setlayout,	   {.v = &layouts[3]} },
+	{ MODKEY,			XK_r,	   setlayout,	   {.v = &layouts[4]} },
+	{ MODKEY,			XK_d,	   setlayout,	   {.v = &layouts[5]} },
+	{ MODKEY,			XK_s,	   setlayout,	   {.v = &layouts[6]} },
+	{ MODKEY|ShiftMask,		XK_s,	   setlayout,	   {.v = &layouts[7]} },
+	{ MODKEY,			XK_g,	   setlayout,	   {.v = &layouts[8]} },
+	{ MODKEY,			XK_c,	   setlayout,	   {.v = &layouts[9]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	{ MODKEY,            	        XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,		XK_equal,  togglegaps,	   {0} },
+	{ MODKEY,			XK_equal,  incrgaps,	   {.i = -1 } },
+	{ MODKEY,			XK_minus,  incrgaps,	   {.i = +1 } },
+	{ MODKEY|ShiftMask,		XK_minus,  defaultgaps,	   {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -93,7 +129,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+//	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
 };
 
 /* button definitions */
