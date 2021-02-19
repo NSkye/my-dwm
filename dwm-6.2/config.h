@@ -2,6 +2,11 @@
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int gappih = 20; // horiz inner gap between windows
+static const unsigned int gappiv = 10; // vert inner gap between windows
+static const unsigned int gappoh = 10; // horiz outer gap
+static const unsigned int gappov = 30; // cert outer gap
+static int smartgaps = 1; // 0 or 1 - disable outer gap when only one window
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -45,7 +50,9 @@ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] 
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
 
-#include "fibonacci.c"
+#define FORCE_VSPLIT 1 // nrowgrid layout: force two clients to always split vertically
+#include "vanitygaps.c"
+
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
@@ -99,6 +106,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	{ MODKEY|ShiftMask,		XK_equal,  togglegaps,	   {0} },
+	{ MODKEY,			XK_equal,  incrgaps,	   {.i = -1 } },
+	{ MODKEY,			XK_minus,  incrgaps,	   {.i = +1 } },
+	{ MODKEY|ShiftMask,		XK_minus,  defaultgaps,	   {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
