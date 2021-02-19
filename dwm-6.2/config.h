@@ -2,10 +2,10 @@
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
-static const unsigned int gappih = 20; // horiz inner gap between windows
-static const unsigned int gappiv = 10; // vert inner gap between windows
+static const unsigned int gappih = 5; // horiz inner gap between windows
+static const unsigned int gappiv = 5; // vert inner gap between windows
 static const unsigned int gappoh = 10; // horiz outer gap
-static const unsigned int gappov = 30; // cert outer gap
+static const unsigned int gappov = 10; // cert outer gap
 static int smartgaps = 1; // 0 or 1 - disable outer gap when only one window
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
