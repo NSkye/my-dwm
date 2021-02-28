@@ -10,8 +10,8 @@ static int smartgaps = 1; // 0 or 1 - disable outer gap when only one window
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "monospace:size=12", "FontAwesome:size=12" };
+static const char dmenufont[]       = "monospace:size=12";
 // bg color
 static const char col_gray1[]       = "#213433";
 // inactive window border
@@ -55,11 +55,11 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ "M=",      tile },    /* first entry is default */
+	{ "f~",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
-	{ "[@]",      spiral },
-	{ "[\\]",     dwindle },
+	{ "M@",      spiral },
+	{ "M\\",     dwindle },
 	{ "M[ ]",      deck },
 	{ "TTT",      bstack },
 	{ "===",      bstackhoriz },
